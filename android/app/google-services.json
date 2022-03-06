@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "321911873287",
+    "project_id": "beta-pkn",
+    "storage_bucket": "beta-pkn.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321911873287:android:f97114df6ee7140b19efa2",
+        "android_client_info": {
+          "package_name": "com.example.coba_pkm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321911873287-p3uloqg9s3a957lj1r4jd15q0n8lvmdh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIQRnw5b7a8EIi8LbYphKat562qHpCKBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321911873287-p3uloqg9s3a957lj1r4jd15q0n8lvmdh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
