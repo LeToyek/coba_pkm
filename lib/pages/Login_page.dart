@@ -1,3 +1,4 @@
+import 'package:coba_pkm/widgets/Button_click.dart';
 import 'package:coba_pkm/widgets/Login_field.dart';
 import 'package:flutter/material.dart';
 
@@ -74,20 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 64,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.orange,
-                      borderRadius: BorderRadius.circular(24)),
-                  padding: EdgeInsets.all(16),
-                  width: double.infinity,
-                  child: Center(
-                    child: Text(
-                      'Register',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                  ),
-                ),
+                ButtonClick(nameButton: "Register"),
                 SizedBox(
                   height: 8,
                 ),
