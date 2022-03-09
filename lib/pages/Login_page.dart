@@ -1,6 +1,10 @@
+import 'package:coba_pkm/pages/Second_page.dart';
 import 'package:coba_pkm/widgets/Button_click.dart';
 import 'package:coba_pkm/widgets/Login_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/utils.dart';
+import 'package:get/get.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,9 +16,19 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPass = TextEditingController();
   final TextEditingController _controllerPass2 = TextEditingController();
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   var smallText = TextStyle(fontSize: 12);
-  void coba() {}
+  void coba() async {
+    try {
+      await auth.createUserWithEmailAndPassword(
+          email: _controllerEmail.text, password: _controllerPass.text);
+      Get.to(() => SecondPage());
+    } catch (e) {
+      final snackBar = SnackBar(content: Text(e.toString()));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

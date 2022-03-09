@@ -12,7 +12,7 @@ class ButtonClick extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        destination;
+        destination();
       },
       child: Container(
         decoration: BoxDecoration(
