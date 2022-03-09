@@ -14,10 +14,18 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerPass2 = TextEditingController();
 
   var smallText = TextStyle(fontSize: 12);
+  void coba() {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        actions: [],
+        leading: IconButton(
+            onPressed: () {}, icon: Icon(Icons.arrow_back_ios_new_rounded)),
+        elevation: 0,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -26,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 64,
+                  height: 16,
                 ),
                 Text(
                   'Register',
@@ -75,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 64,
                 ),
-                ButtonClick(nameButton: "Register"),
+                ButtonClick(nameButton: "Register", destination: coba),
                 SizedBox(
                   height: 8,
                 ),

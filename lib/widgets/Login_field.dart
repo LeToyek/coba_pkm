@@ -35,8 +35,8 @@ class _LoginFieldState extends State<LoginField> {
                         });
                       },
                       icon: isVisible
-                          ? Icon(Icons.visibility)
-                          : Icon(Icons.visibility_off))
+                          ? Icon(Icons.visibility_off)
+                          : Icon(Icons.visibility))
                   : null,
               prefixIcon: widget.prefIcon,
               filled: true,
