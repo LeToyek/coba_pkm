@@ -1,4 +1,6 @@
-import 'package:coba_pkm/pages/Login_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coba_pkm/controller/account_controller.dart';
+import 'package:coba_pkm/pages/Register_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,6 +15,8 @@ class SecondPage extends StatefulWidget {
 class _SecondPageState extends State<SecondPage> {
   User? _activeUser;
   FirebaseAuth _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
+  // final controller = Get.find<AccountController>();
 
   void getCurrentUser() async {
     try {
@@ -24,6 +28,15 @@ class _SecondPageState extends State<SecondPage> {
       print(e);
     }
   }
+
+  // void addUserNameToDb() {
+  //   if (controller.controllerText.isEmpty) {
+  //   } else {
+  //     _firestore
+  //         .collection('user')
+  //         .add({'name': controller.controllerText.value});
+  //   }
+  // }
 
   @override
   void initState() {
@@ -37,10 +50,14 @@ class _SecondPageState extends State<SecondPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            onPressed: () => Get.off(LoginPage()),
+            onPressed: () => Get.off(RegisterPage()),
             icon: Icon(Icons.arrow_back_ios)),
       ),
-      body: Container(),
+      // body: Column(
+      //   children: [
+      //     Obx(() => Text(controller.controllerText.value)),
+      //   ],
+      // ),
     );
   }
 }

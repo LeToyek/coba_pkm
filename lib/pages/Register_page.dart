@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coba_pkm/controller/account_controller.dart';
-import 'package:coba_pkm/pages/Register_page.dart';
 import 'package:coba_pkm/pages/Second_page.dart';
 import 'package:coba_pkm/widgets/Button_click.dart';
 import 'package:coba_pkm/widgets/Login_field.dart';
@@ -9,21 +8,32 @@ import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:get/get.dart';
 
-class LoginPage extends StatefulWidget {
+import 'Login_page.dart';
+
+class RegisterPage extends StatefulWidget {
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPass = TextEditingController();
-  final _auth = FirebaseAuth.instance;
+  final TextEditingController _controllerPass2 = TextEditingController();
+  FirebaseAuth auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
+
   var smallText = TextStyle(fontSize: 12);
   void coba() async {
     try {
-      await _auth.signInWithEmailAndPassword(
+      await auth.createUserWithEmailAndPassword(
           email: _controllerEmail.text, password: _controllerPass.text);
-      Get.to(SecondPage());
+      Get.to(() => SecondPage());
+      _firestore.collection('users').add({
+        'name': _controllerName.text,
+        'email': _controllerEmail.text,
+        'date': Timestamp.now()
+      });
     } catch (e) {
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -36,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
     // TODO: implement dispose
     _controllerEmail.dispose();
     _controllerPass.dispose();
+    _controllerPass2.dispose();
     super.dispose();
   }
 
@@ -59,16 +70,23 @@ class _LoginPageState extends State<LoginPage> {
                   height: 16,
                 ),
                 Text(
-                  'Login',
+                  'Register',
                   style: Theme.of(context).textTheme.headline4?.copyWith(
                       color: Colors.orange, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  'Log in to your account',
+                  'Create your new account',
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(
                   height: 32,
+                ),
+                LoginField(
+                  prefIcon: Icon(Icons.person),
+                  hint: "Full Name",
+                  controller: _controllerName,
+                  isSafe: false,
+                  isEmail: false,
                 ),
                 LoginField(
                   prefIcon: Icon(Icons.mail),
@@ -84,6 +102,13 @@ class _LoginPageState extends State<LoginPage> {
                   isSafe: true,
                   isEmail: false,
                 ),
+                LoginField(
+                  prefIcon: Icon(Icons.lock),
+                  hint: "Confirm Password",
+                  controller: _controllerPass2,
+                  isSafe: true,
+                  isEmail: false,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
@@ -95,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 64,
                 ),
-                ButtonClick(nameButton: "Login", destination: coba),
+                ButtonClick(nameButton: "Register", destination: coba),
                 SizedBox(
                   height: 8,
                 ),
@@ -103,17 +128,18 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Doesn't have account yet? ",
+                      'Already have account ? ',
                       style: smallText,
                     ),
                     InkWell(
-                      onTap: () => Get.to(RegisterPage()),
-                      child: Text(
-                        'Register',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 12),
-                      ),
-                    )
+                        onTap: () {
+                          Get.to(LoginPage());
+                        },
+                        child: Text(
+                          'Sign in',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 12),
+                        ))
                   ],
                 ),
                 SizedBox(

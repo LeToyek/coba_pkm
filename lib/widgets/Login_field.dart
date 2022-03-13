@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
 
 class LoginField extends StatefulWidget {
-  bool isSafe;
+  bool isSafe, isEmail;
   Icon prefIcon;
   String hint;
   TextEditingController controller;
-  LoginField({
-    required this.prefIcon,
-    required this.hint,
-    required this.controller,
-    required this.isSafe,
-  });
+  LoginField(
+      {required this.prefIcon,
+      required this.hint,
+      required this.controller,
+      required this.isSafe,
+      required this.isEmail});
 
   @override
   State<LoginField> createState() => _LoginFieldState();
 }
 
 class _LoginFieldState extends State<LoginField> {
-  bool isVisible = false;
+  bool isVisible = true;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         TextField(
           controller: widget.controller,
-          obscureText: isVisible,
+          obscureText: widget.isSafe ? isVisible : false,
+          keyboardType:
+              widget.isEmail ? TextInputType.emailAddress : TextInputType.text,
           decoration: InputDecoration(
               isDense: true,
               suffixIcon: widget.isSafe
@@ -35,8 +37,8 @@ class _LoginFieldState extends State<LoginField> {
                         });
                       },
                       icon: isVisible
-                          ? Icon(Icons.visibility_off)
-                          : Icon(Icons.visibility))
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off))
                   : null,
               prefixIcon: widget.prefIcon,
               filled: true,
