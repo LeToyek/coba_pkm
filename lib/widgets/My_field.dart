@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class LoginField extends StatefulWidget {
+class MyField extends StatefulWidget {
   bool isSafe, isEmail;
   Icon prefIcon;
   String hint;
   TextEditingController controller;
-  LoginField(
+  MyField(
       {required this.prefIcon,
       required this.hint,
       required this.controller,
@@ -13,10 +13,10 @@ class LoginField extends StatefulWidget {
       required this.isEmail});
 
   @override
-  State<LoginField> createState() => _LoginFieldState();
+  State<MyField> createState() => _LoginFieldState();
 }
 
-class _LoginFieldState extends State<LoginField> {
+class _LoginFieldState extends State<MyField> {
   bool isVisible = true;
   @override
   Widget build(BuildContext context) {

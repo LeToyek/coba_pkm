@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coba_pkm/controller/account_controller.dart';
 import 'package:coba_pkm/pages/Register_page.dart';
 import 'package:coba_pkm/pages/Second_page.dart';
+import 'package:coba_pkm/pages/account_page.dart';
 import 'package:coba_pkm/widgets/Button_click.dart';
-import 'package:coba_pkm/widgets/Login_field.dart';
+import 'package:coba_pkm/widgets/My_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
@@ -23,12 +24,11 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await _auth.signInWithEmailAndPassword(
           email: _controllerEmail.text, password: _controllerPass.text);
-      Get.to(SecondPage());
+      Get.to(() => AccountPage(), arguments: {'email': _controllerEmail.text});
     } catch (e) {
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
-    Get.to(SecondPage());
   }
 
   @override
@@ -70,14 +70,14 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 32,
                 ),
-                LoginField(
+                MyField(
                   prefIcon: Icon(Icons.mail),
                   hint: "Email",
                   controller: _controllerEmail,
                   isSafe: false,
                   isEmail: true,
                 ),
-                LoginField(
+                MyField(
                   prefIcon: Icon(Icons.lock),
                   hint: "Password",
                   controller: _controllerPass,
