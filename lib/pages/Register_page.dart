@@ -31,7 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
           email: _controllerEmail.text, password: _controllerPass.text);
       Get.to(() => SecondPage());
       DatabaseService.createOrUpdateUser(
-          _controllerEmail.text, _controllerName.text);
+          _controllerEmail.text, _controllerName.text, 0, 0);
     } catch (e) {
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);

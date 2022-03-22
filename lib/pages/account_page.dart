@@ -19,7 +19,11 @@ class _AccountPageState extends State<AccountPage> {
   void getName() async {
     DocumentSnapshot snapshot =
         await DatabaseService.getUser(userEmail['email']);
-    name = snapshot.get(['name']);
+    setState(() {
+      name = snapshot['name'];
+    });
+
+    print("asdasdasd====>>>>>" + snapshot.toString());
   }
 
   void initState() {

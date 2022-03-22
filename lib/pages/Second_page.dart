@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coba_pkm/controller/account_controller.dart';
+import 'package:coba_pkm/controller/database_services.dart';
 import 'package:coba_pkm/pages/Register_page.dart';
 import 'package:coba_pkm/pages/account_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
@@ -20,6 +20,9 @@ class _SecondPageState extends State<SecondPage> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
   final controller = Get.put(AccountController());
+  var getEmail = Get.arguments;
+  String userEmail = '';
+  String name = '';
 
   // final controller = Get.find<AccountController>();
 
@@ -29,9 +32,18 @@ class _SecondPageState extends State<SecondPage> {
       if (currentUser != null) {
         _activeUser = currentUser;
       }
+      userEmail = await _activeUser!.email!;
     } catch (e) {
       print(e);
     }
+  }
+
+  void getUserName() async {
+    DocumentSnapshot snapshot = await DatabaseService.getUser(userEmail);
+    setState(() {
+      name = snapshot['name'];
+    });
+    print("fakkkkk=========>" + name);
   }
 
   @override
@@ -39,23 +51,22 @@ class _SecondPageState extends State<SecondPage> {
     // TODO: implement initState
     super.initState();
     getCurrentUser();
+    _getCurrentLocation();
   }
 
-  // Position? _currentPosition;
-  // void _getCurrentLocation() async {
-  //   await Geolocator.checkPermission();
-  //   await Geolocator.requestPermission();
-  //   await Geolocator.getCurrentPosition(
-  //           desiredAccuracy: LocationAccuracy.low,
-  //           forceAndroidLocationManager: true)
-  //       .then((Position position) {
-  //     setState(() {
-  //       _currentPosition = position;
-  //     });
-  //   }).catchError((e) {
-  //     print("error ---->" + e);
-  //   });
-  // }
+  double longitudeData = 0;
+  double latitudeData = 0;
+
+  void _getCurrentLocation() async {
+    // await Geolocator.checkPermission();
+    // await Geolocator.requestPermission();
+    final geoposition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      latitudeData = geoposition.latitude;
+      longitudeData = geoposition.longitude;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +86,21 @@ class _SecondPageState extends State<SecondPage> {
                 },
                 child: Text("go to acc page")),
             ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  _getCurrentLocation();
+                  getUserName();
+                  await DatabaseService.createOrUpdateUser(userEmail,
+                      'Toyek Sudjatmiko', latitudeData, longitudeData);
+                  print('latitude = ${latitudeData}');
+                  print(userEmail);
+                  print(name);
                   // _getCurrentLocation();
                   // print(_currentPosition?.latitude);
                 },
                 child: Text('show Location')),
+            Text("Lat = ${latitudeData}"),
+            Text("Long = ${longitudeData}")
+
             // _currentPosition != null
             //     ? Text(
             //         "LAT: ${_currentPosition!.latitude}, LNG: ${_currentPosition!.longitude}")
