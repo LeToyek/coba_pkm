@@ -6,8 +6,12 @@ import 'package:coba_pkm/widgets/Profile_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../controller/account_controller.dart';
+
 class AccountPage extends StatefulWidget {
   @override
+  String email;
+  AccountPage({required this.email});
   State<AccountPage> createState() => _AccountPageState();
 }
 
@@ -17,8 +21,7 @@ class _AccountPageState extends State<AccountPage> {
   var userEmail = Get.arguments;
   @override
   void getName() async {
-    DocumentSnapshot snapshot =
-        await DatabaseService.getUser(userEmail['email']);
+    DocumentSnapshot snapshot = await DatabaseService.getUser(widget.email);
     setState(() {
       name = snapshot['name'];
     });

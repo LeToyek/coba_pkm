@@ -3,15 +3,17 @@ import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
 
 class AccountController extends GetxController {
-  var textController = TextEditingController();
-  var controllerText = ''.obs;
+  void _getCurrentLocation() async {
+    // await Geolocator.checkPermission();
+    // await Geolocator.requestPermission();
+    final geoposition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
 
   @override
   void onInit() {
     // TODO: implement onInit
+    _getCurrentLocation();
     super.onInit();
-    textController.addListener(() {
-      controllerText.value = textController.text;
-    });
   }
 }

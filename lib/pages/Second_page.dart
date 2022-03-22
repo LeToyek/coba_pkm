@@ -9,48 +9,41 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
 class SecondPage extends StatefulWidget {
-  const SecondPage({Key? key}) : super(key: key);
-
   @override
   State<SecondPage> createState() => _SecondPageState();
 }
 
 class _SecondPageState extends State<SecondPage> {
-  User? _activeUser;
   FirebaseAuth _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
   final controller = Get.put(AccountController());
-  var getEmail = Get.arguments;
   String userEmail = '';
   String name = '';
 
   // final controller = Get.find<AccountController>();
 
-  void getCurrentUser() async {
-    try {
-      var currentUser = await _auth.currentUser;
-      if (currentUser != null) {
-        _activeUser = currentUser;
-      }
-      userEmail = await _activeUser!.email!;
-    } catch (e) {
-      print(e);
-    }
-  }
+  // void getCurrentUser() {
+  //   try {
+  //     var currentUser = _auth.currentUser;
+  //     if (currentUser != null) {
+  //       _activeUser = currentUser;
+  //     }
+  //     setState(() {
+  //       userEmail = _activeUser!.email!;
+  //     });
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
-  void getUserName() async {
-    DocumentSnapshot snapshot = await DatabaseService.getUser(userEmail);
-    setState(() {
-      name = snapshot['name'];
-    });
-    print("fakkkkk=========>" + name);
-  }
-
-  @override
+  // void getUserName() async {
+  //   DocumentSnapshot snapshot = await DatabaseService.getUser(userEmail);
+  //   setState(() {
+  //     name = snapshot['name'];
+  //   });
+  // }
   void initState() {
     // TODO: implement initState
     super.initState();
-    getCurrentUser();
     _getCurrentLocation();
   }
 
@@ -58,8 +51,8 @@ class _SecondPageState extends State<SecondPage> {
   double latitudeData = 0;
 
   void _getCurrentLocation() async {
-    // await Geolocator.checkPermission();
-    // await Geolocator.requestPermission();
+    await Geolocator.checkPermission();
+    await Geolocator.requestPermission();
     final geoposition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     setState(() {
@@ -76,37 +69,48 @@ class _SecondPageState extends State<SecondPage> {
             onPressed: () => Get.off(RegisterPage()),
             icon: Icon(Icons.arrow_back_ios)),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  Get.to(AccountPage());
-                },
-                child: Text("go to acc page")),
-            ElevatedButton(
-                onPressed: () async {
-                  _getCurrentLocation();
-                  getUserName();
-                  await DatabaseService.createOrUpdateUser(userEmail,
-                      'Toyek Sudjatmiko', latitudeData, longitudeData);
-                  print('latitude = ${latitudeData}');
-                  print(userEmail);
-                  print(name);
-                  // _getCurrentLocation();
-                  // print(_currentPosition?.latitude);
-                },
-                child: Text('show Location')),
-            Text("Lat = ${latitudeData}"),
-            Text("Long = ${longitudeData}")
-
-            // _currentPosition != null
-            //     ? Text(
-            //         "LAT: ${_currentPosition!.latitude}, LNG: ${_currentPosition!.longitude}")
-            //     : Text('blom'),
-          ],
-        ),
+      body: SingleChildScrollView(
+        child: Center(
+            child: latitudeData == 0 && longitudeData == 0
+                ? CircularProgressIndicator()
+                : FutureBuilder<DocumentSnapshot>(
+                    future: DatabaseService.getUser(_auth.currentUser!.email!),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Error blok');
+                      } else if (snapshot.hasData && !snapshot.data!.exists) {
+                        return Text('Document does not exist');
+                      } else if (snapshot.connectionState ==
+                          ConnectionState.done) {
+                        Map<String, dynamic> data =
+                            snapshot.data!.data() as Map<String, dynamic>;
+                        name = data['name'];
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  Get.to(AccountPage(
+                                    email: _auth.currentUser!.email!,
+                                  ));
+                                },
+                                child: Text("go to acc page")),
+                            ElevatedButton(
+                                onPressed: () async {
+                                  await DatabaseService.createOrUpdateUser(
+                                      _auth.currentUser!.email!,
+                                      name,
+                                      latitudeData,
+                                      longitudeData);
+                                },
+                                child: Text('show Location')),
+                            Text("Lat = ${latitudeData}"),
+                            Text("Long = ${longitudeData}")
+                          ],
+                        );
+                      }
+                      return Container();
+                    })),
       ),
     );
   }

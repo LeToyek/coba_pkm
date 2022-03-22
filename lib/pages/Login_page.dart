@@ -24,7 +24,9 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await _auth.signInWithEmailAndPassword(
           email: _controllerEmail.text, password: _controllerPass.text);
-      Get.to(() => AccountPage(), arguments: {'email': _controllerEmail.text});
+      Get.to(() => AccountPage(
+            email: _controllerEmail.text,
+          ));
     } catch (e) {
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
